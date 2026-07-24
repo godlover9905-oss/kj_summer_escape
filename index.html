@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>방향키 자물쇠</title>
+
+<style>
+body{
+    margin:0;
+    background:#1f1f1f;
+    color:white;
+    font-family:Arial;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.lock{
+    text-align:center;
+}
+
+h1{
+    margin-bottom:20px;
+}
+
+#display{
+    font-size:40px;
+    margin:25px;
+    letter-spacing:8px;
+    min-height:50px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:80px 80px 80px;
+    gap:10px;
+    justify-content:center;
+}
+
+button{
+    width:80px;
+    height:80px;
+    font-size:35px;
+    border:none;
+    border-radius:15px;
+    background:#444;
+    color:white;
+    cursor:pointer;
+    transition:.15s;
+}
+
+button:active{
+    transform:scale(.95);
+    background:#666;
+}
+
+.empty{
+    visibility:hidden;
+}
+
+#message{
+    margin-top:20px;
+    font-size:24px;
+    height:30px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="lock">
+
+<h1>🔒 방향 자물쇠</h1>
+
+<div id="display">□□□□</div>
+
+<div class="grid">
+<div class="empty"></div>
+<button onclick="press('ArrowUp')">▲</button>
+<div class="empty"></div>
+
+<button onclick="press('ArrowLeft')">◀</button>
+<button onclick="press('ArrowDown')">▼</button>
+<button onclick="press('ArrowRight')">▶</button>
+</div>
+
+<div id="message"></div>
+
+</div>
+
+<script>
+
+// 정답과 이동할 페이지
+const passwords = {
+    "ArrowUp,ArrowRight,ArrowDown,ArrowLeft":"peter.html",
+    "ArrowRight,ArrowUp,ArrowLeft,ArrowDown":"jonah.html",
+    "ArrowDown,ArrowDown,ArrowRight,ArrowUp":"joseph.html"
+};
+
+let input=[];
+
+function update(){
+
+    let text="";
+
+    for(let i=0;i<input.length;i++) text+="■";
+    for(let i=input.length;i<4;i++) text+="□";
+
+    document.getElementById("display").textContent=text;
+}
+
+function success(page){
+
+    document.getElementById("display").textContent="🔓";
+    document.getElementById("message").textContent="잠금 해제!";
+
+    setTimeout(()=>{
+        window.location.href=page;
+    },1000);
+
+}
+
+function fail(){
+
+    document.getElementById("message").textContent="실패";
+
+    setTimeout(()=>{
+
+        input=[];
+        update();
+        document.getElementById("message").textContent="";
+
+    },1000);
+
+}
+
+function press(dir){
+
+    input.push(dir);
+
+    update();
+
+    if(input.length===4){
+
+        let code=input.join(",");
+
+        if(passwords[code]){
+            success(passwords[code]);
+        }else{
+            fail();
+        }
+
+        input=[];
+
+    }
+
+}
+
+document.addEventListener("keydown",function(e){
+
+    if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)){
+        press(e.key);
+    }
+
+});
+
+update();
+
+</script>
+
+</body>
+</html>

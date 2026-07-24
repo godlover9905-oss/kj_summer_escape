@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>단서 사진</title>
+
+<style>
+
+body{
+    margin:0;
+    background:#111;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    overflow:hidden;
+}
+
+.gallery{
+    position:relative;
+    width:100%;
+    height:100%;
+}
+
+.gallery img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    display:none;
+}
+
+.gallery img.active{
+    display:block;
+}
+
+button{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:60px;
+    height:60px;
+    border:none;
+    border-radius:50%;
+    font-size:30px;
+    cursor:pointer;
+    background:rgba(0,0,0,.5);
+    color:white;
+}
+
+#prev{
+    left:20px;
+}
+
+#next{
+    right:20px;
+}
+
+#count{
+    position:absolute;
+    bottom:20px;
+    left:50%;
+    transform:translateX(-50%);
+    color:white;
+    font-size:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="gallery">
+
+    <img src="photo4.png" class="active">
+    <img src="photo5.png">
+    <img src="photo6.png">
+
+    <button id="prev">◀</button>
+    <button id="next">▶</button>
+
+    <div id="count">1 / 3</div>
+
+</div>
+
+<script>
+
+const images=document.querySelectorAll("img");
+const count=document.getElementById("count");
+
+let current=0;
+
+function show(index){
+
+    images[current].classList.remove("active");
+
+    current=index;
+
+    images[current].classList.add("active");
+
+    count.textContent=(current+1)+" / "+images.length;
+
+}
+
+document.getElementById("next").onclick=function(){
+
+    show((current+1)%images.length);
+
+}
+
+document.getElementById("prev").onclick=function(){
+
+    show((current-1+images.length)%images.length);
+
+}
+
+// 키보드 방향키도 가능
+document.addEventListener("keydown",function(e){
+
+    if(e.key==="ArrowRight"){
+        show((current+1)%images.length);
+    }
+
+    if(e.key==="ArrowLeft"){
+        show((current-1+images.length)%images.length);
+    }
+
+});
+
+</script>
+
+</body>
+</html>
